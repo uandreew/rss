@@ -98,7 +98,7 @@ function checkPower(roomId: string, sender: string): Promise<boolean> {
 
 async function trySubscribe(roomId: string, event: any, url: string) {
     if (!(await checkPower(roomId, event.sender))) {
-        return appservice.botClient.replyHtmlNotice(roomId, event, `<b>You do not have permission to run this command.</b>Please ask a room moderator to perform it instead.`);
+        return appservice.botClient.replyHtmlNotice(roomId, event, `<b>У вас немає прав використовувати цю команду.</b>Будь ласка, попросіть модератора кімнати виконати її замість вас.`);
     }
 
     try {
@@ -107,13 +107,13 @@ async function trySubscribe(roomId: string, event: any, url: string) {
         await reactTo(roomId, event, '✅');
     } catch (e) {
         LogService.error("index", e);
-        return appservice.botClient.replyHtmlNotice(roomId, event, `<b>There was an error handling your RSS subscription.</b><br/>Is the URL a valid RSS, Atom, or JSON feed?`);
+        return appservice.botClient.replyHtmlNotice(roomId, event, `<b>Виникла помилка при обробці вашої RSS-підписки.</b><br/>Ваше писалння є RSS, Atom або JSON?`);
     }
 }
 
 async function tryUnsubscribe(roomId: string,  event: any, url: string) {
     if (!(await checkPower(roomId, event.sender))) {
-        return appservice.botClient.replyHtmlNotice(roomId, event, `<b>You do not have permission to run this command.</b>Please ask a room moderator to perform it instead.`);
+        return appservice.botClient.replyHtmlNotice(roomId, event, `<b>У вас немає прав використовувати цю команду.</b>Будь ласка, попросіть модератора кімнати виконати її замість вас.`);
     }
     await rss.unsubscribe(roomId, url);
     await reactTo(roomId, event, '✅');
@@ -121,12 +121,12 @@ async function tryUnsubscribe(roomId: string,  event: any, url: string) {
 
 async function tryListSubscriptions(roomId: string, event: any) {
     const urls = await rss.subscriptionsFor(roomId);
-    if (!urls || !urls.length) return appservice.botClient.replyHtmlNotice(roomId, event, `No subscriptions.`);
+    if (!urls || !urls.length) return appservice.botClient.replyHtmlNotice(roomId, event, `Немає підписок.`);
     return appservice.botClient.replyHtmlNotice(roomId, event, `Subscriptions:<ul><li>${urls.map(u => sanitizeHtml(u)).join(`</li><li>`)}</li>`);
 }
 
 async function tryHelp(roomId: string, event: any) {
-    await appservice.botClient.replyHtmlNotice(roomId, event, `<b>RSS Bot Help</b><br/>Commands:<ul><li><code>!rss subscribe &lt;url&gt;</code> - Subscribe to a feed.</li><li><code>!rss unsubscribe &lt;url&gt;</code> - Unsubscribe from a feed.</li><li><code>!rss subscriptions</code> - List all subscribed feed URLs.</li></ul>`);
+    await appservice.botClient.replyHtmlNotice(roomId, event, `<b>Допомога по RSS Bot</b><br/>Commands:<ul><li><code>!rss subscribe &lt;url&gt;</code> - підписатися на стрічку.</li><li><code>!rss unsubscribe &lt;url&gt;</code> - відписатися від стрічки.</li><li><code>!rss subscriptions</code> - список усіх стрічок.</li></ul>`);
 }
 
 function reactTo(roomId: string, event: any, reaction: string): Promise<unknown> {
